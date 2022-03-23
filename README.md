@@ -10,3 +10,12 @@ To Do:
 * add convolutions
 * fix plot to show ordered numbers
 * interpolation test
+
+---------------------------------------------------------------
+Bonus: Add julia to the path in Mac OS
+
+```
+sudo mkdir -p /usr/local/bin
+sudo rm -f /usr/local/bin/julia
+sudo ln -s /Applications/Julia-1.7.app/Contents/Resources/julia/bin/julia /usr/local/bin/julia
+```
