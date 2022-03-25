@@ -1,4 +1,4 @@
-include("vae_mnist.jl")
+include("vae.jl")
 
 using Plots
 

@@ -19,12 +19,60 @@ using ProgressMeter: Progress, next!
 using TensorBoardLogger: TBLogger, tb_overwrite
 using Random
 
+
 # load MNIST images and return loader
 function get_data(batch_size, nclasses)
     xtrain, ytrain = MLDatasets.MNIST.traindata(Float32)
+    # yidx = sortperm(ytrain)
+    yints = ytrain
+    # @info "yidx" yidx
     xtrain = reshape(xtrain, 28^2, :)
     ytrain = float.(Flux.onehotbatch(ytrain, 0:nclasses-1))
-    DataLoader((xtrain, ytrain), batchsize=batch_size, shuffle=true)
+    
+    datadims = size(xtrain)
+    @info datadims
+
+    # reserve some imgs to plot
+    nperclass = datadims[2] ÷ nclasses
+    @info nperclass
+    xplot = zeros(28^2, nclasses ^2)
+    yplot = zeros(nclasses, nclasses * nclasses)
+    
+    # for i in 1:nclasses-1
+    #     idx = findall(x -> x == i - 1, yints)[1:nclasses]
+    
+    #     xplot[:,(i * nclasses) : (i + 1) * nclasses - 1] = xtrain[:,idx]
+    #     yplot[:,(i * nclasses) : (i + 1) * nclasses - 1] = ytrain[:,idx]
+
+    #     @info yints[idx]
+
+    # end
+    for i in 0:nclasses-1
+        idx = findall(x -> x == i, yints)[1:nclasses]
+    
+        xplot[:,(i * nclasses) + 1 : (i + 1) * nclasses] = xtrain[:,idx]
+        yplot[:,(i * nclasses) + 1 : (i + 1) * nclasses] = ytrain[:,idx]
+
+        @info yints[idx]
+
+    end
+
+    # @info "xplot" size(xplot)
+    # for i in 1:nclasses^2
+    #     # @info "shape" size(xtrain[:,i]) size(ytrain[:,i])
+    #     # @info "shape" size(xplot[:,i]) size(yplot[:,i])
+        
+    #     xplot[:,i] = xtrain[:,i]
+    #     yplot[:,i] = ytrain[:,i]
+    #     @info "ytrain" ytrain[:,i]
+    # end
+
+    # xplot = [xtrain[i + j * nperclass] for i in 1:nclasses for j in 1:nclasses]
+    # yplot = [ytrain[i + j * nperclass] for i in 1:nclasses for j in 1:nclasses]
+    
+    loader = DataLoader((xtrain, ytrain), batchsize=batch_size, shuffle=true)
+
+    return loader, xplot, yplot
 end
 
 struct Encoder
@@ -110,7 +158,7 @@ function train(; kws...)
     end
 
     # load MNIST images
-    loader = get_data(args.batch_size, args.nclasses)
+    loader, xplot, yplot = get_data(args.batch_size, args.nclasses)
     
     # initialize encoder and decoder, add class dim here
     encoder = Encoder(args.input_dim, args.latent_dim, args.hidden_dim, args.nclasses) |> device
@@ -130,9 +178,11 @@ function train(; kws...)
     end
 
     # fixed input
-    original, y_original = first(get_data(args.sample_size^2, args.nclasses))
-    original = original |> device
-    y_original = y_original |> device
+    # original, y_original = first(get_data(args.sample_size^2, args.nclasses))
+    # original = original |> device
+    # y_original = y_original |> device
+    original = xplot |> device
+    y_original = yplot |> device
     image = convert_to_image(original, args.sample_size)
     image_path = joinpath(args.save_path, "original.png")
     save(image_path, image)
