@@ -8,7 +8,6 @@ Mostly borrowed from [FluxML](https://github.com/FluxML/model-zoo/tree/master/vi
 
 To Do:
 * add convolutions
-* fix plot to show ordered numbers
 * interpolation test
 
 ---------------------------------------------------------------
