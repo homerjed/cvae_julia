@@ -1,13 +1,15 @@
 # cvae_julia
 Conditional Variational Auto-Encoder in Julia.
 
+* `vae.jl` uses `Dense` layers
+* `vae_conv.jl` uses `Conv` and `ConvTranspose` layers
+
 Mostly borrowed from [FluxML](https://github.com/FluxML/model-zoo/tree/master/vision/vae_mnist).
 
 ![alt text](https://github.com/homerjed/cvae_julia/blob/main/original.png?raw=true)
 ![alt text](https://github.com/homerjed/cvae_julia/blob/main/epoch_20.png?raw=true)
 
 To Do:
-* add convolutions
 * interpolation test
 
 ---------------------------------------------------------------
