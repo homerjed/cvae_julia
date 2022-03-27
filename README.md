@@ -9,9 +9,6 @@ Mostly borrowed from [FluxML](https://github.com/FluxML/model-zoo/tree/master/vi
 ![alt text](https://github.com/homerjed/cvae_julia/blob/main/original.png?raw=true)
 ![alt text](https://github.com/homerjed/cvae_julia/blob/main/epoch_20.png?raw=true)
 
-To Do:
-* interpolation test
-
 ---------------------------------------------------------------
 Bonus: Add julia to the path in Mac OS
 
